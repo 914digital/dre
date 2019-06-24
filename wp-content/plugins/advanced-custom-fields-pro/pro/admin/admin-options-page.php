@@ -105,6 +105,10 @@ class acf_admin_options_page {
 		$this->page = acf_get_options_page( $plugin_page );
 		
 		
+		// get post_id (allow lang modification)
+		$this->page['post_id'] = acf_get_valid_post_id($this->page['post_id']);
+		
+		
 		// verify and remove nonce
 		if( acf_verify_nonce('options') ) {
 		
@@ -186,9 +190,7 @@ class acf_admin_options_page {
 		
 		// notices
 		if( !empty($_GET['message']) && $_GET['message'] == '1' ) {
-		
-			acf_add_admin_notice( $this->page['updated_message'] );
-			
+			acf_add_admin_notice( $this->page['updated_message'], 'success' );
 		}
 		
 		
@@ -198,8 +200,8 @@ class acf_admin_options_page {
 		
 		
 		if( empty($field_groups) ) {
-		
-			acf_add_admin_notice( sprintf( __('No Custom Field Groups found for this options page. <a href="%s">Create a Custom Field Group</a>', 'acf'), admin_url() . 'post-new.php?post_type=acf-field-group' ), 'error');
+			
+			acf_add_admin_notice( sprintf( __('No Custom Field Groups found for this options page. <a href="%s">Create a Custom Field Group</a>', 'acf'), admin_url('post-new.php?post_type=acf-field-group') ), 'warning' );
 		
 		} else {
 			
@@ -257,6 +259,15 @@ class acf_admin_options_page {
 	
 	function postbox_submitdiv( $post, $args ) {
 		
+		/**
+		*   Fires before the major-publishing-actions div.
+		*
+		*  @date	24/9/18
+		*  @since	5.7.7
+		*
+		*  @param array $page The current options page.
+		*/
+		do_action( 'acf/options_page/submitbox_before_major_actions', $this->page );
 		?>
 		<div id="major-publishing-actions">
 
@@ -265,11 +276,21 @@ class acf_admin_options_page {
 				<input type="submit" accesskey="p" value="<?php echo $this->page['update_button']; ?>" class="button button-primary button-large" id="publish" name="publish">
 			</div>
 			
+			<?php
+			/**
+			*   Fires before the major-publishing-actions div.
+			*
+			*  @date	24/9/18
+			*  @since	5.7.7
+			*
+			*  @param array $page The current options page.
+			*/
+			do_action( 'acf/options_page/submitbox_major_actions', $this->page );
+			?>
 			<div class="clear"></div>
 		
 		</div>
 		<?php
-		
 	}
 	
 	
@@ -300,8 +321,8 @@ class acf_admin_options_page {
 			'key'			=> $field_group['key'],
 			'style'			=> $field_group['style'],
 			'label'			=> $field_group['label_placement'],
-			'edit_url'		=> '',
-			'edit_title'	=> __('Edit field group', 'acf'),
+			'editLink'		=> '',
+			'editTitle'		=> __('Edit field group', 'acf'),
 			'visibility'	=> true
 		);
 		
@@ -309,7 +330,7 @@ class acf_admin_options_page {
 		// edit_url
 		if( $field_group['ID'] && acf_current_user_can_admin() ) {
 			
-			$o['edit_url'] = admin_url('post.php?post=' . $field_group['ID'] . '&action=edit');
+			$o['editLink'] = admin_url('post.php?post=' . $field_group['ID'] . '&action=edit');
 				
 		}
 		
@@ -319,7 +340,7 @@ class acf_admin_options_page {
 		
 		
 		// render
-		acf_render_fields( $this->page['post_id'], $fields, 'div', $field_group['instruction_placement'] );
+		acf_render_fields( $fields, $this->page['post_id'], 'div', $field_group['instruction_placement'] );
 		
 		
 		
@@ -327,7 +348,7 @@ class acf_admin_options_page {
 <script type="text/javascript">
 if( typeof acf !== 'undefined' ) {
 		
-	acf.postbox.render(<?php echo json_encode($o); ?>);	
+	acf.newPostbox(<?php echo json_encode($o); ?>);	
 
 }
 </script>
