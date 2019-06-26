@@ -16,8 +16,11 @@
                     </h1>
                     <?php echo term_description( $term_id, 'propertytype' ) ?>
                     <div class="loop-block">
+                    <?php if(have_posts()) { ?>
                         <h2><?php single_term_title(); ?> Case Studies
                         </h2>
+                    <?php } else { ?>
+                    <?php } ?>
                         <div class="row">
                         
                         <?php // WP_Query arguments
@@ -73,8 +76,11 @@
                         </div>
                     </div>
                     <div class="loop-block">
+                    <?php if(have_posts()) { ?>
                         <h2>Current <?php single_term_title(); ?> Properties
                         </h2>
+                    <?php } else { ?>
+                    <?php } ?>
                         <div class="row">
                         <?php // WP_Query arguments
                          $queried_object = get_queried_object();
@@ -162,8 +168,11 @@
                         </div>
                     </div>
                     <div class="loop-block">
+                    <?php if(have_posts()) { ?>
                         <h2>Sold <?php single_term_title(); ?> Properties
                         </h2>
+                    <?php } else { ?>
+                    <?php } ?>
                         <div class="row">
                         <?php // WP_Query arguments
                          $queried_object = get_queried_object();
