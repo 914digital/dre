@@ -1,5 +1,4 @@
 <?php get_template_part('parts/header'); ?>
-
 <div class="page-wrapper prop-bg">
     <div class="container">
         <div class="row">
