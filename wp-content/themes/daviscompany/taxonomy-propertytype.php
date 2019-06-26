@@ -16,11 +16,42 @@
                     </h1>
                     <?php echo term_description( $term_id, 'propertytype' ) ?>
                     <div class="loop-block">
-                    <?php if(have_posts()) { ?>
-                        <h2><?php single_term_title(); ?> Case Studies
-                        </h2>
-                    <?php } else { ?>
-                    <?php } ?>
+                    <?php // WP_Query arguments
+                         $queried_object = get_queried_object();
+                            $slug = $queried_object->slug;
+                        
+                            $args = array (
+                            'post_type' => array( 'properties' ),
+                            'posts_per_page' => '1',
+                            'tax_query' => array(
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array($slug)
+                                    ),
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array('case-studies')
+                                            )
+                                )
+                            );
+
+                            // The Query
+                            $csquery = new WP_Query( $args );
+
+                            // The Loop
+                            if ( $csquery->have_posts() ) {
+                            while ( $csquery->have_posts() ) {
+                            $csquery->the_post(); ?>
+                            <h2><?php single_term_title(); ?> Case Studies</h2>
+                            <?php }
+                            } else {
+                            // no posts found
+                            }
+
+                            // Restore original Post Data
+                            wp_reset_postdata(); ?>
                         <div class="row">
                         
                         <?php // WP_Query arguments
@@ -76,11 +107,45 @@
                         </div>
                     </div>
                     <div class="loop-block">
-                    <?php if(have_posts()) { ?>
-                        <h2>Current <?php single_term_title(); ?> Properties
-                        </h2>
-                    <?php } else { ?>
-                    <?php } ?>
+                    <?php // WP_Query arguments
+                         $queried_object = get_queried_object();
+                            $slug = $queried_object->slug;
+                        
+                            $args = array (
+                            'post_type' => array( 'properties' ),
+                            'posts_per_page' => '1',
+                            'tax_query' => array(
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array($slug)
+                                    ),
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array('current')
+                                            )
+                                )
+                            );
+
+                            // The Query
+                            $curquery = new WP_Query( $args );
+
+                            // The Loop
+                            if ( $curquery->have_posts() ) { ?>
+                            <?php while ( $curquery->have_posts() ) { ?>
+                            <?php $curquery->the_post(); ?>
+                   
+                        <h2>Current <?php single_term_title(); ?> Properties</h2>
+
+                        <?php }
+                            } else {
+                            // no posts found
+                            }
+
+                            // Restore original Post Data
+                            wp_reset_postdata(); ?>
+                   
                         <div class="row">
                         <?php // WP_Query arguments
                          $queried_object = get_queried_object();
@@ -168,11 +233,46 @@
                         </div>
                     </div>
                     <div class="loop-block">
-                    <?php if(have_posts()) { ?>
+            
+                        <?php // WP_Query arguments
+                         $queried_object = get_queried_object();
+                            $slug = $queried_object->slug;
+                        
+                            $args = array (
+                            'post_type' => array( 'properties' ),
+                            'posts_per_page' => '1',
+                            'tax_query' => array(
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array($slug)
+                                    ),
+                                    array(
+                                'taxonomy' => 'propertytype',
+                                'field' => 'slug',
+                                'terms' => array('sold')
+                                            )
+                                )
+                            );
+
+                            // The Query
+                            $soldquery = new WP_Query( $args );
+
+                            // The Loop
+                            if ( $soldquery->have_posts() ) { ?>
+                           
+                            <?php while ( $soldquery->have_posts() ) { ?>
+                           
+                            <?php $soldquery->the_post(); ?>
                         <h2>Sold <?php single_term_title(); ?> Properties
                         </h2>
-                    <?php } else { ?>
-                    <?php } ?>
+                        <?php }
+                            } else {
+                            // no posts found
+                            }
+
+                            // Restore original Post Data
+                            wp_reset_postdata(); ?>
                         <div class="row">
                         <?php // WP_Query arguments
                          $queried_object = get_queried_object();
@@ -180,7 +280,7 @@
                         
                             $args = array (
                             'post_type' => array( 'properties' ),
-                            'posts_per_page' => '-1',
+                            'posts_per_page' => '1',
                             'tax_query' => array(
                                     array(
                                 'taxonomy' => 'propertytype',
